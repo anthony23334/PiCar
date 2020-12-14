@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %} Control Page {% endblock %}
+
+{% block content %} 
+<iframe width="650" height="480" src="http://192.168.1.214:8000/index.html">
+</iframe>
+
+<h4>Use (UP/DOWN) (RIGHT/LEFT) keyboard </h4>
+
+<script>
+  $(window).keydown(function(e) {
+    switch (e.keyCode) {
+      case 37: // left arrow key
+        console.log("Left");
+        $("#LEFT").submit(); 
+
+        break; 
+      case 38: // up arrow key
+        e.preventDefault(); // avoid browser scrolling due to pressed key
+        console.log("Up");
+        $("#FRONT").submit(); 
+        break; 
+      case 39: // right arrow key
+        e.preventDefault();
+        console.log("Right");
+        $("#RIGHT").submit(); 
+        break; 
+      case 40: // up arrow key
+        e.preventDefault();
+        // TODO: go to next image
+        console.log("Down");
+        $("#BACK").submit(); 
+
+        return;
+    }
+  });
+</script>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col col-sm-1">
+      <form target="frame" id="STOP" action="/robot_stop" method="post">
+        <button name="STOP" type="submit" >STOP</button>
+      </form>
+    </div>
+    
+
+    <div class="col col-sm-1">
+      <form target="frame" id="FRONT" action="/robot_front" method="post">
+        <button name="FRONT" type="submit" class="btn btn-primary btn-lg">FRONT</button>
+      </form>
+    </div>
+    
+    <div class="col col-sm-1"></div>
+
+  </div>
+  <div class="row">
+    <div class="col col-sm-1">
+      <form name="LEFT" id="LEFT" target="frame" action="/robot_left" method="post">
+        <button name="LEFT" type="submit" class="btn btn-primary btn-lg">LEFT</button>
+      </form>    
+    </div>
+    
+    <div class="col col-sm-1"></div>
+
+    <div class="col col-sm-1">
+      <form target="frame" id="RIGHT" action="/robot_right" method="post">
+        <button name="RIGHT" type="submit" class="btn btn-primary btn-lg">RIGHT</button>
+      </form> 
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-sm-1"></div>
+
+    <div class="col col-sm-1">
+      <form target="frame" id="BACK" action="/robot_back" method="post">
+        <button name="BACK" type="submit" class="btn btn-primary btn-lg">BACK</button>
+      </form>
+    </div>
+
+    <div class="col col-sm-1"></div>
+  </div>
+</div>
+
+<iframe name="frame"></iframe>
+{% endblock %}

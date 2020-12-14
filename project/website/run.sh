@@ -16,7 +16,7 @@ if [[ $1 -eq 0 ]] ; then
 
   # Start the camera server and put in the background 
   echo '====== Starting the camera server (8000) ======'
-  python3 /home/pi/final_lab/camera/cam.py & > /dev/null
+  python3 ../camera/cam.py & > /dev/null
   echo '*********done*********'
 
   echo ""
@@ -33,7 +33,7 @@ fi
 if [[ $1 -eq 1 ]] ; then 
   # Start the camera server and put in the background 
   echo '====== Starting the camera server (8000) ======'
-  python3 /home/pi/final_lab/camera/cam.py & > /dev/null
+  #python3 ../camera/cam.py & > /dev/null
   echo '*********done*********'
 fi 
 
