@@ -4,9 +4,10 @@ import os
 import io
 import time
 import picamera
+from robot_control import RobotControl
 
 class RobotDetection(object):
-  def __init__(self):
+  def __init__(self, rc):
     self.orb = cv2.ORB_create(nfeatures=3000)
     #Determines if the image was a good match
     #Kp stands for keypoints
@@ -14,6 +15,8 @@ class RobotDetection(object):
     self.desList = []
     self.images = []
     self.classNames = []
+    self.turn_count = 0
+    self.rc = rc
 
 
   def load_images(self, path_name):
@@ -94,6 +97,9 @@ class RobotDetection(object):
             break
         else:
             print('object location still in progress')
+            self.rc.automonous()
 
-# rd = RobotDetection()
-# rd.start() 
+
+rc = RobotControl(3, 0.5)
+rd = RobotDetection(rc)
+rd.start() 
