@@ -16,8 +16,8 @@ class RobotControl(object):
         GPIO.setup(self.ai2, GPIO.OUT)
         GPIO.setup(self.bi1, GPIO.OUT)
         GPIO.setup(self.bi2, GPIO.OUT)
-        self.pa.start(60)
-        self.pb.start(60)
+        self.pa.start(95)
+        self.pb.start(90)
         self.movement_counter = 0
         self.straight_time = straight_time
         self.turn_time = turn_time

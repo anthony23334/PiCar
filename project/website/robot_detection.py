@@ -67,23 +67,29 @@ class RobotDetection(object):
 
   def start(self):
     self.load_images('Photos')
+    count = 0
+    Found = False
     # Create the in-memory stream
     with picamera.PiCamera() as camera:
       while True:
-        stream = io.BytesIO()
-        camera.start_preview()
-        camera.capture(stream, format='jpeg')
-        # Construct a numpy array from the stream
-        data = np.fromstring(stream.getvalue(), dtype=np.uint8)
-        # "Decode" the image from the array, preserving colour
-        image = cv2.imdecode(data, 1)
-        # OpenCV returns an array with data in BGR order. If you want RGB instead
-        # use the following...
-        img2 = image[:, :, ::-1]
-        # success, img2 = self.cap.read()
-        imgOriginal = img2.copy()
-        img2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
-        Found, Name = self.findID(img2)
+        count = 0
+        while ((Found != True) and count < 5):
+          stream = io.BytesIO()
+          camera.start_preview()
+          camera.capture(stream, format='jpeg')
+          # Construct a numpy array from the stream
+          data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+          # "Decode" the image from the array, preserving colour
+          image = cv2.imdecode(data, 1)
+          # OpenCV returns an array with data in BGR order. If you want RGB instead
+          # use the following...
+          img2 = image[:, :, ::-1]
+          # success, img2 = self.cap.read()
+          imgOriginal = img2.copy()
+          img2 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
+          Found, Name = self.findID(img2)
+          if (Found == False):
+            count = count + 1
         # cv2.imshow('img2', imgOriginal)
         # if (cv2.waitKey(1) & 0xFF ==ord('q')):
         #   cv2.VideoCapture.release(cap)
