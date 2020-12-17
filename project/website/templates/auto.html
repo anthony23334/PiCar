@@ -5,8 +5,27 @@
 
 <form action = "http://localhost:5000/uploader" method = "POST" 
     enctype = "multipart/form-data">
-    <input type = "file" name = "file" />
+    <input type = "file" name = "file" onchange="readURL(this);" />
+    <img id="blah" src="#" alt="your image" />
     <input type = "submit"/>
 </form>   
+
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(300)
+                    .height(300);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
 
 {% endblock %}

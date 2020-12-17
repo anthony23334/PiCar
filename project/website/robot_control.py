@@ -112,7 +112,7 @@ class RobotControl(object):
                 self.movement_counter =self.movement_counter +1
                 return straight_time - .5
             elif (self.movement_counter % 2 == 1):
-                self.turn_90_right(turn_time)
+                self.turn_right(turn_time)
                 self.movement_counter =self.movement_counter +1
         return straight_time 
 
