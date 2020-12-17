@@ -19,6 +19,7 @@ app = Flask(__name__)
 # Create a directory in a known location to save files to.
 uploads_dir = 'Photos'
 
+@app.route('')
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -75,4 +76,4 @@ def upload_file():
         f = request.files['file']
         f.save(os.path.join(uploads_dir, secure_filename("TEST.png")))
         rd.start()
-        return 'file uploaded successfully'
+        return 'FOUND THE TARGET'
