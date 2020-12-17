@@ -14,13 +14,13 @@ echo 'Please enter your netid: '
 read netid 
 
 if [[ "$netid" == "akk72" ]] ; then 
-  WEB_PORT_CLASS = 8888
-  CAM_PORT_CLASS = 9999
+  WEB_PORT_CLASS=8888
+  CAM_PORT_CLASS=9999
 fi 
 
 if [[ "$netid" == "an474" ]] ; then 
-  WEB_PORT_CLASS = 2222
-  CAM_PORT_CLASS = 1111
+  WEB_PORT_CLASS=2222
+  CAM_PORT_CLASS=3333
 fi 
 
 if [[ $1 -eq 0 ]] ; then 

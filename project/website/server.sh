@@ -13,20 +13,20 @@ echo '====== Welcome to PiCar (Server) ======'
 echo 'Please enter your netid: '
 read netid 
 
-if [[ "$netid" == "akk72" ]] ; then 
-  WEB_PORT_CLASS = 8888
-  CAM_PORT_CLASS = 9999
+if [[ "$netid" == "an474" ]] ; then 
+  WEB_PORT_CLASS=8888
+  CAM_PORT_CLASS=9999
 fi 
 
-if [[ "$netid" == "an474" ]] ; then 
-  WEB_PORT_CLASS = 2222
-  CAM_PORT_CLASS = 1111
+if [[ "$netid" == "akk72" ]] ; then 
+  WEB_PORT_CLASS=2222
+  CAM_PORT_CLASS=1111
 fi 
 
 if [[ $1 -eq 0 ]] ; then 
   # Open the camera tunnel (RECV):
   echo '====== Ssh-tunneling camera ====== '
-  ssh -fNR CAM_PORT_CLASS:localhost:$CAM_PORT $netid@$CLASS_IP > /dev/null
+  ssh -fNR $CAM_PORT_CLASS:localhost:$CAM_PORT $netid@$CLASS_IP > /dev/null
   echo "*********done*********"
 
   echo ""
@@ -42,7 +42,7 @@ if [[ $1 -eq 0 ]] ; then
 
   # Open the website tunnel(RECV):
   echo '====== Ssh-tunneling server ======'
-  ssh -fNR WEB_PORT_CLASS:localhost:$WEB_PORT $netid@$CLASS_IP > /dev/null 
+  ssh -fNR $WEB_PORT_CLASS:localhost:$WEB_PORT $netid@$CLASS_IP > /dev/null 
   echo '*********done*********'
 
   echo ""
