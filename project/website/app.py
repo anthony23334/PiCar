@@ -10,6 +10,8 @@ from robot_detection import RobotDetection
 import time 
 
 # proc = subprocess.Popen(["python", "../testing/robot_test.py"], stdin=subprocess.PIPE)
+cam = 0
+cam_proc= 0
 
 rc = RobotControl()
 rd = RobotDetection(rc)
@@ -19,18 +21,34 @@ app = Flask(__name__)
 # Create a directory in a known location to save files to.
 uploads_dir = 'Photos'
 
-@app.route('')
 @app.route('/')
 def home():
     return render_template('index.html')
 
 @app.route('/control')
 def control():
+    global cam 
+    global cam_proc
+    if (cam == 0): 
+        # cam_proc = os.system( 'python3 ../camera/cam.py & > /dev/null' )
+        cam_proc = subprocess.Popen("exec python3 ../camera/cam.py > /dev/null", stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
+        time.sleep( 1 )
+    cam = 1
     return render_template('control.html')
 
 @app.route('/auto')
 def auto():
+    global cam
+    global cam_proc
+    # kill the process running camera: python3  
+    if (cam == 1): 
+        print(str(cam_proc.pid))
+        cam_proc.kill()  
+        print("JUST KILLED IT")
+
+    cam = 0 
     return render_template('auto.html') 
+
 
 
 @app.route('/robot_front', methods=['GET', 'POST'])
