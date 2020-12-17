@@ -8,6 +8,7 @@ class RobotControl(object):
         self.bi1 = 12 
         self.bi2 = 16 
         GPIO.setmode(GPIO.BCM)   # Set for broadcom numbering not board numbers...
+        GPIO.setwarnings(False)
         GPIO.setup(5, GPIO.OUT)
         self.pa = GPIO.PWM(5, 50)
         GPIO.setup(20, GPIO.OUT)
@@ -87,7 +88,7 @@ class RobotControl(object):
             Time_diff = Now - start_time 
         self.stop()
     
-    def turn_straight(self):
+    def go_straight(self):
         self.front()
         Time_diff = 0
         start_time = time.time()
@@ -99,7 +100,7 @@ class RobotControl(object):
     def automonous(self):
         if(self.straight_time != 0):
             if (self.movement_counter % 2 == 0):
-                self.turn_straight()
+                self.go_straight()
                 self.straight_time = self.straight_time - .5
                 self.movement_counter =self.movement_counter +1
             elif (self.movement_counter % 2 == 1):

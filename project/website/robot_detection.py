@@ -90,11 +90,6 @@ class RobotDetection(object):
           Found, Name = self.findID(img2)
           if (Found == False):
             count = count + 1
-        # cv2.imshow('img2', imgOriginal)
-        # if (cv2.waitKey(1) & 0xFF ==ord('q')):
-        #   cv2.VideoCapture.release(cap)
-        #   cv2.destroyAllWindows()
-        #   break
         if(Found):
             print('object was found')
             print(Name)
@@ -106,6 +101,6 @@ class RobotDetection(object):
             self.rc.automonous()
 
 
-rc = RobotControl(3, 0.5)
-rd = RobotDetection(rc)
-rd.start() 
+# rc = RobotControl(3, 0.5) # go straight for 3, turn for 0.5
+# rd = RobotDetection(rc)
+# rd.start() 

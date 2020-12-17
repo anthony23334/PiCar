@@ -10,8 +10,8 @@ from robot_detection import RobotDetection
 
 # proc = subprocess.Popen(["python", "../testing/robot_test.py"], stdin=subprocess.PIPE)
 
-rc = RobotControl()
-rd = RobotDetection()
+rc = RobotControl( straight_time=3,  turn_time=0.5 )
+rd = RobotDetection(rc)
 
 app = Flask(__name__)
 
