@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 class RobotControl(object):
-    def __init__(self,straight_time, turn_time):
+    def __init__(self):
         self.ai1 = 6 
         self.ai2 = 26 
         self.bi1 = 12 
@@ -17,11 +17,10 @@ class RobotControl(object):
         GPIO.setup(self.ai2, GPIO.OUT)
         GPIO.setup(self.bi1, GPIO.OUT)
         GPIO.setup(self.bi2, GPIO.OUT)
-        self.pa.start(65)
+        self.pa.start(60)
         self.pb.start(60)
         self.movement_counter = 0
-        self.straight_time = straight_time
-        self.turn_time = turn_time
+        
     # turns: 0 -> stop, 1 -> CW, 2 -> CCW
     def run(self, serv_leter, turn):
         if ( serv_leter == 'a'):
@@ -70,60 +69,52 @@ class RobotControl(object):
         self.run("a", 0)
         self.run("b", 0)
 
-    def turn_45_right(self):
+    def turn_right(self, turn_time):
         self.right()
         Time_diff = 0
         start_time = time.time()
-        while(Time_diff < self.turn_time/2):
+        while(Time_diff < turn_time):
             Now = time.time() 
             Time_diff = Now - start_time 
         self.stop()
 
-    def turn_45_left(sel):
+    def turn_left(self, turn_time):
         self.left()
         Time_diff = 0
         start_time = time.time()
-        while(Time_diff < self.turn_time/2):
-            Now = time.time() 
-            Time_diff = Now - start_time 
-        self.stop()
-
-    def turn_90_right(self):
-        self.right()
-        Time_diff = 0
-        start_time = time.time()
-        while(Time_diff < self.turn_time):
+        while(Time_diff < turn_time):
             Now = time.time() 
             Time_diff = Now - start_time 
         self.stop()
     
-    def turn_90_left(sel):
-        self.left()
-        Time_diff = 0
-        start_time = time.time()
-        while(Time_diff < self.turn_time):
-            Now = time.time() 
-            Time_diff = Now - start_time 
-        self.stop()
-    
-    def go_straight(self):
+    def go_straight(self, straight_time):
         self.front()
         Time_diff = 0
         start_time = time.time()
-        while(Time_diff <self.straight_time):
+        while(Time_diff < straight_time):
+            Now = time.time() 
+            Time_diff = Now - start_time 
+        self.stop()
+        
+    def go_back(self, back_time):
+        self.back()
+        Time_diff = 0
+        start_time = time.time()
+        while(Time_diff < back_time):
             Now = time.time() 
             Time_diff = Now - start_time 
         self.stop()
 
-    def automonous(self):
-        if(self.straight_time != 0):
+    def automonous(self, straight_time, turn_time):
+        if(straight_time != 0):
             if (self.movement_counter % 2 == 0):
-                self.go_straight()
-                self.straight_time = self.straight_time - .5
+                self.go_straight(straight_time)
                 self.movement_counter =self.movement_counter +1
+                return straight_time - .5
             elif (self.movement_counter % 2 == 1):
-                self.turn_90_right()
+                self.turn_90_right(turn_time)
                 self.movement_counter =self.movement_counter +1
+        return straight_time 
 
         
 #rc = RobotControl(3, 0.5)

@@ -70,6 +70,8 @@ class RobotDetection(object):
     count = 0
     Found = False
     # Create the in-memory stream
+    straight_time = 3
+    turn_time = 0.5
     with picamera.PiCamera() as camera:
       while True:
         count = 0
@@ -98,7 +100,7 @@ class RobotDetection(object):
             break
         else:
             print('object location still in progress')
-            self.rc.automonous()
+            straight_time = self.rc.automonous(straight_time, turn_time)
 
 
 # rc = RobotControl(3, 0.5) # go straight for 3, turn for 0.5

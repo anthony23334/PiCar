@@ -10,7 +10,7 @@ from robot_detection import RobotDetection
 
 # proc = subprocess.Popen(["python", "../testing/robot_test.py"], stdin=subprocess.PIPE)
 
-rc = RobotControl( straight_time=3,  turn_time=0.5 )
+rc = RobotControl()
 rd = RobotDetection(rc)
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ def auto():
 def robot_front():
     # global proc 
     # proc.stdin.write(str.encode('f'))
-    rc.front()
+    rc.go_straight(1)
     print("FRONT")  
     return ('', 204)
 
@@ -43,21 +43,21 @@ def robot_front():
 def robot_back():
     # global proc 
     # proc.stdin.write(str.encode('b'))
-    rc.back()
+    rc.go_back(1)
     print("BACK")  
     return ('', 204)
 
 @app.route('/robot_right', methods=['GET', 'POST'])
 def robot_right():
     # proc.stdin.write('r')
-    rc.turn_45_right()
+    rc.turn_right(0.5)
     print("RIGHT")  
     return ('', 204)
 
 @app.route('/robot_left', methods=['GET', 'POST'])
 def robot_left():
     # proc.stdin.write('l')
-    rc.turn_45_left();    
+    rc.turn_left(0.5);    
     print("LEFT")  
     return ('', 204)
 
