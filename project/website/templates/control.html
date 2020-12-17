@@ -2,10 +2,63 @@
 {% block title %} Control Page {% endblock %}
 
 {% block content %} 
-<iframe width="650" height="480" src="http://localhost:8000/index.html">
-</iframe>
 
-<h4>Use (UP/DOWN) (RIGHT/LEFT) keyboard </h4>
+<h5>Use (UP/DOWN) (RIGHT/LEFT) keyboard </h5>
+
+<div class="container">
+  <div class="left">
+    <iframe width="680" height="500" src="http://localhost:8000/index.html">
+    </iframe>
+  </div>
+
+
+  <div class="right">
+    <div class="row">
+
+      <div class="col col-sm-1">
+        <form target="frame" id="STOP" action="/robot_stop" method="post">
+          <button name="STOP" type="submit" >STOP</button>
+        </form>
+      </div>
+       
+
+      <div class="col col-sm-1">
+        <form target="frame" id="FRONT" action="/robot_front" method="post">
+          <button name="FRONT" type="submit" class="btn btn-primary btn-lg">FRONT</button>
+        </form>
+      </div>
+      
+      <div class="col col-sm-1"></div>
+
+    </div>
+    <div class="row">
+      <div class="col col-sm-1">
+        <form name="LEFT" id="LEFT" target="frame" action="/robot_left" method="post">
+          <button name="LEFT" type="submit" class="btn btn-primary btn-lg">LEFT</button>
+        </form>    
+      </div>
+      
+      <div class="col col-sm-1"></div>
+
+      <div class="col col-sm-1">
+        <form target="frame" id="RIGHT" action="/robot_right" method="post">
+          <button name="RIGHT" type="submit" class="btn btn-primary btn-lg">RIGHT</button>
+        </form> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-sm-1"></div>
+
+      <div class="col col-sm-1">
+        <form target="frame" id="BACK" action="/robot_back" method="post">
+          <button name="BACK" type="submit" class="btn btn-primary btn-lg">BACK</button>
+        </form>
+      </div>
+
+      <div class="col col-sm-1"></div>
+    </div>
+  </div>
+</div>
 
 <script>
   $(window).keydown(function(e) {
@@ -35,53 +88,6 @@
     }
   });
 </script>
-
-<div class="container">
-  <div class="row">
-
-    <div class="col col-sm-1">
-      <form target="frame" id="STOP" action="/robot_stop" method="post">
-        <button name="STOP" type="submit" >STOP</button>
-      </form>
-    </div>
-    
-
-    <div class="col col-sm-1">
-      <form target="frame" id="FRONT" action="/robot_front" method="post">
-        <button name="FRONT" type="submit" class="btn btn-primary btn-lg">FRONT</button>
-      </form>
-    </div>
-    
-    <div class="col col-sm-1"></div>
-
-  </div>
-  <div class="row">
-    <div class="col col-sm-1">
-      <form name="LEFT" id="LEFT" target="frame" action="/robot_left" method="post">
-        <button name="LEFT" type="submit" class="btn btn-primary btn-lg">LEFT</button>
-      </form>    
-    </div>
-    
-    <div class="col col-sm-1"></div>
-
-    <div class="col col-sm-1">
-      <form target="frame" id="RIGHT" action="/robot_right" method="post">
-        <button name="RIGHT" type="submit" class="btn btn-primary btn-lg">RIGHT</button>
-      </form> 
-    </div>
-  </div>
-  <div class="row">
-    <div class="col col-sm-1"></div>
-
-    <div class="col col-sm-1">
-      <form target="frame" id="BACK" action="/robot_back" method="post">
-        <button name="BACK" type="submit" class="btn btn-primary btn-lg">BACK</button>
-      </form>
-    </div>
-
-    <div class="col col-sm-1"></div>
-  </div>
-</div>
 
 <iframe name="frame"></iframe>
 {% endblock %}

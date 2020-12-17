@@ -1,2 +1,15 @@
 body {color:rgb(240, 0, 0);}
 
+.left {
+  width:55%;
+  position: fixed; 
+  left: 0; 
+  justify-content: left;
+}
+
+.right {
+  width:55%;
+  position: fixed; 
+  right: 0; 
+  justify-content: right;
+}

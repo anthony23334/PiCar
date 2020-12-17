@@ -7,6 +7,7 @@ from robot_control import RobotControl
 from werkzeug import secure_filename
 import os 
 from robot_detection import RobotDetection 
+import time 
 
 # proc = subprocess.Popen(["python", "../testing/robot_test.py"], stdin=subprocess.PIPE)
 

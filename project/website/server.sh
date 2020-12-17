@@ -33,9 +33,9 @@ if [[ $1 -eq 0 ]] ; then
   echo ""
 
   # Start the camera server and put in the background 
-  echo '====== Starting the camera server ======'
-  python3 ../camera/cam.py & > /dev/null
-  echo '*********done*********'
+  # echo '====== Starting the camera server ======'
+  # python3 ../camera/cam.py & > /dev/null
+  # echo '*********done*********'
 
   echo ""
   echo ""
