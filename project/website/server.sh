@@ -20,7 +20,7 @@ fi
 
 if [[ "$netid" == "akk72" ]] ; then 
   WEB_PORT_CLASS=2222
-  CAM_PORT_CLASS=1111
+  CAM_PORT_CLASS=3333
 fi 
 
 if [[ $1 -eq 0 ]] ; then 
