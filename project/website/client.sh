@@ -26,7 +26,7 @@ fi
 if [[ $1 -eq 0 ]] ; then 
   # Open the camera tunnel (RECV):
   echo '====== Ssh-tunneling camera ====== '
-  ssh -fNL $CAM_PORT:localhost:$WEB_PORT_CLASS $netid@$CLASS_IP 
+  ssh -fNL $CAM_PORT:localhost:$CAM_PORT_CLASS $netid@$CLASS_IP 
   echo "*********done*********"
 
   echo ""
@@ -34,7 +34,7 @@ if [[ $1 -eq 0 ]] ; then
 
   # Open the website tunnel(RECV):
   echo '====== Ssh-tunneling server ======'
-  ssh -fNL $WEB_PORT:localhost:$CAM_PORT_CLASS $netid@$CLASS_IP 
+  ssh -fNL $WEB_PORT:localhost:$WEB_PORT_CLASS $netid@$CLASS_IP 
   echo '*********done*********'
 
   echo ""

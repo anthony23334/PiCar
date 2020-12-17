@@ -50,14 +50,14 @@ def robot_back():
 @app.route('/robot_right', methods=['GET', 'POST'])
 def robot_right():
     # proc.stdin.write('r')
-    rc.right()
+    rc.turn_45_right()
     print("RIGHT")  
     return ('', 204)
 
 @app.route('/robot_left', methods=['GET', 'POST'])
 def robot_left():
     # proc.stdin.write('l')
-    rc.left();    
+    rc.turn_45_left();    
     print("LEFT")  
     return ('', 204)
 

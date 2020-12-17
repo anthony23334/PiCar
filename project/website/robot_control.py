@@ -70,6 +70,24 @@ class RobotControl(object):
         self.run("a", 0)
         self.run("b", 0)
 
+    def turn_45_right(self):
+        self.right()
+        Time_diff = 0
+        start_time = time.time()
+        while(Time_diff < self.turn_time/2):
+            Now = time.time() 
+            Time_diff = Now - start_time 
+        self.stop()
+
+    def turn_45_left(sel):
+        self.left()
+        Time_diff = 0
+        start_time = time.time()
+        while(Time_diff < self.turn_time/2):
+            Now = time.time() 
+            Time_diff = Now - start_time 
+        self.stop()
+
     def turn_90_right(self):
         self.right()
         Time_diff = 0
