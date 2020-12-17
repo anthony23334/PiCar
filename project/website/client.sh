@@ -6,7 +6,7 @@ CLASS_IP=132.236.79.205
 kill $(pgrep -f 'python3') > /dev/null 
 
 echo '====== Welcome to PiCar (Client) ======'
-echo 'Please enter your netid:'
+echo 'Please enter your netid: '
 read netid 
 
 if [[ $1 -eq 0 ]] ; then 
