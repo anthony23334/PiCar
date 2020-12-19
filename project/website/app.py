@@ -48,7 +48,6 @@ def auto():
     if (cam == 1): 
         print(str(cam_proc.pid))
         cam_proc.kill()  
-        print("JUST KILLED IT")
 
     cam = 0 
     return render_template('auto.html') 

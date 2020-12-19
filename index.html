@@ -17,8 +17,8 @@
 		<!-- Header -->
 			<section id="header">
 				<header>
-					<h1 id="logo"><a href="#"> <img src="images/picar_logo.png" style="
-						width: 50px;" alt="Picar" /> </a></h1>
+					<h1 id="logo"><a href="#"> <img src="img/picar_logo.png" style="
+						width: 50px;" alt="Picar" /> </a> </h1>
 					<h1>ECE 5725: Final Project </h1>	
 					<div style="height: 10px"></div>				
 					<h3 style="margin: 0px;" >	<a href="https://www.linkedin.com/in/an23334/" class="icon brands fa-linkedin"><span class="label">Linkendin-Anthony</span></a> Anthony Ngoma </h3>
@@ -92,33 +92,128 @@
 							<section id="three">
 								<div class="container">
 									<h3>Design and Testing</h3>
-
 									<h5>Software</h5>
-
 									<h5> Interface Scripts</h5>
 									<section>
 										<p>
 											We have decided to build two main scripts as entry points to launching PiCar, one to launch the PiCar server and the other to authenticate the client. 
 											These scripts' roles are to: start the Flask webserver and make sure ssh tunneling is established between the server and the client ports through the class' server. 
-											Since both students were working remotely, we relied on the class' public ip to do port forawrding (ssh tunneling). 
+											Since both students were working remotely, we relied on the class' public IP to do port forawrding (ssh tunneling). 
+										</p>
+
+										<ul>
+											<li> <b> Server.sh</b>: Starting point for launching PiCar website and creating ssh tunneling ports.</li>
+											<li> <b> Client.sh</b>: Allowing the user to forward requests through ssh tunneling.</li>
+											<li> <b> Clean.sh</b>: Freeing any used PiCar ports for the user to use.</li>
+										</ul>
+										<figure>
+											<figcaption> <b> <u>Figure 1: Server Response through Classs' IP. </u></b> </figcaption>
+											<img class="image" src="img/server_response.svg" alt="serverResponse" />
+										</figure>
+										<p>
+											The first main script -- <b>server.sh</b> -- sets up the website and creates a port on the class' public server in order to do ssh tunneling to give authenticated remote users access to the website. 
+										</p>
+										<p>							
+											Regarding the ssh tunneling, the server exposes two ports (port=8888 and port=9999) (as show in <b>figure 1</b>) by creating a connection on two remote ports (port=8888 and port=9999 respectively). 
+											On the server RPi, we have two servers running. These two ports exposes the camera server and the website server. 
+											We seperated these into two servers in order for us to create different processes and allow multi-process systems that can provide 
+											a smooth real time video feedback system for remote control mode. 
+											From these two port connections, any authenticated users sending requests from the class' server will be able to access the RPi's website and camera. 
+										</p>
+
+										<figure>
+											<figcaption> <b> <u>Figure 2: Client Request through Class' IP. </u></b> </figcaption>
+											<img class="image" src="img/client_request.svg" alt="clientRequest" />
+										</figure>
+										<p>
+											The second main script -- <b>client.sh</b> -- has only one job which is to allow the user to forward any localhost requests to the class' server ports. 
+											In order for us to switch roles as servers and clients, we decided to create four ports on the class' server.
+											Since each student has their own RPis and camera, we were able to control each others robots through ssh tunneling.    
+										</p>
+										<p>							
+											Regarding the ssh tunneling, the server exposes two ports -- port=8888 and port=9999 -- (as show in <b>figure 2</b>) by creating a connection on two remote ports (port=8888 and port=9999 respectively). 
+											From these two port connections, any remote clients can access the server RPi.   
+										</p>
+										<p>
+											The last script -- <b>clean.sh</b> -- was created to allow the user to kill and free any ports that PiCar will need before running client.sh or server.sh. 
+											This has made development super fast since we relied on an automated way to free ports. One other option that we looked into is adding input parameters to these scripts 
+											to allow the user to change these ports. Since this is a prototype, we did not see the value of adding such support at this time. 
 										</p>
 
 										<p>
-											The first main script is the 											
+											<b>KEY POINTS on ssh tunneling: </b>		
+											<br />- To have a successful connection, the client HASH to connect to the same ports as the server namely port=8888 and port=9999 in order to access RPi server's website and camera. 
+											<br />- To avoid any conflicts with port on the class' server, a new server needs to create new ports (instead of port=8888 and port=9999 ). 
+											<br />- To stop the ssh tunnel from "HANGING UP", add "-fNR or -fNL" to put keep these connections in background and free the RPi's shell.  
 										</p>
-
 									</section>
 
 									<h5> Web Server</h5>
 									<section>
+										<p>
+										The web server uses python Flask app for the backend and relies on CSS, HTML, Jquery, and JS for the frontend. 
+										The frontend has 3 main pages: home, control, and autonomous as shown below. 
+										</p>
+										<figure>
+											<figcaption> <b> <u>Figure 3: PiCar Home Page. </u></b> </figcaption>
+											<img class="image" style="width: 700px;" src="img/home_page.png" alt="PiCar's Home Page" />
+										</figure>
+
+										<figure>
+											<figcaption> <b> <u>Figure 3: PiCar Control Page. </u></b> </figcaption>
+											<img class="image" style="width: 700px;" src="img/control_page.png" alt="PiCar's Control Page" />
+										</figure>
+
+										<figure>
+											<figcaption> <b> <u>Figure 3: PiCar Auto Page. </u></b> </figcaption>
+											<img class="image" style="width: 700px;" src="img/auto_page.png" alt="PiCar's Auto Page" />
+										</figure>
+
+										<p>
+											To connect these pages to the server RPi, the backend of the webserver supports and exposes 9 endpoints:    
+										</p>
+										<ul>
+											<li> <b> @app.route('/') </b>: returns the main page of the PiCar site namely <b>index.html</b></li>
+											<li> <b> @app.route('/control') </b>: return the control page of the PiCar webiste namely <b>control.html</b></li>
+											<li> <b> @app.route('/auto')</b>: return the autonomous page of the PiCar webiste namely <b>auto.html</b></li>
+											<li> <b> @app.route('/robot_front')</b>: entry point to command the server robot to move forward. </li>
+											<li> <b> @app.route('/robot_back')</b>: entry point to command the server robot to move backward.</li>
+											<li> <b> @app.route('/robot_right')</b>: entry point to command the server robot to move to the right.</li>
+											<li> <b> @app.route('/robot_left')</b>: entry point to command the server robot to move to the leff.</li>
+											<li> <b> @app.route('/robot_stop')</b>: entry point to command the server robot to stop. </li>
+											<li> <b> @app.route('/uploader')</b>: given an image, this endpoint enables server robot to start auto search then returns ONLY after the item was found.</li>
+										</ul>
+
 									</section>
 
 									<h5> Camera Server</h5>
 									<section>
+										<p>
+											For control mode, the camera frame rate and latency is crucial. As the client relies on the website to control the robot remotely, 
+											any latency can affect the user experience. To resolve this issue and have a fast real time video feedback system, the control page relies on both the web server and camera server. 
+											These are two seperate processes running on the raspberry pi. Through context switching, each process will run as if it was the only one running thus decreasing any latency. 		
+										</p>
+										<p>
+											If the client decides to control the RPi server robot and navigates to the PiCar control page, the '\control' endpoint on the webserver will
+											create a new process (if one already does not exists) of the camera server. Using Python os package, the webserver starts the camera server, puts it in the background, and save its PID. 
+											Later on, if the client switches mode (clicks on the autonomous tab), the webserver from the "/auto" endpoint kills the camera process. 
+											<b>With limited resources (one camera), the server RPi cannot use the camera for both control and autonmous logic;</b> therefore, the camera process gets killed which frees the camera for the auto mode logic.
+											We have considered merging the logics for auto and control in order to eliminate the need of creating and deleting the camera process; however, 
+											due to the limited amount of time we had, we decided to have a working propotype that could always be improved. 
+										</p>
+
+										<p>
+											The current camera server relies on the Python picamera library and uses a buffer to load different frames on a server. 
+											This server runs at port=8000 and exposes endpoints to retrieve frames as the server captures images from the RPi camera. 
+											This setup is very simple since we do not have to directly confifgure the RPi camera and can just rely on the picamera library after specificying 
+											options such as framerate. All of this code will then run in a particular process and the website can access the server by sending get requests to localhost:8000 which where the camera server is running.  
+										</p>
+
 									</section>
 								
 									<h5> Robot Control</h5>
 									<section>
+
 									</section>
 
 									<h5> Robot Detection</h5>
@@ -141,7 +236,6 @@
 							<section id="four">
 								<div class="container">
 									<h3>Results</h3>
-									<p>Integer eu ante ornare amet commetus vestibulum blandit integer in curae ac faucibus integer non. Adipiscing cubilia elementum integer. Integer eu ante ornare amet commetus.</p>
 									
 								</div>
 							</section>
@@ -151,7 +245,6 @@
 							<section id="five">
 								<div class="container">
 									<h3>Conclusions</h3>
-									<p>Integer eu ante ornare amet commetus vestibulum blandit integer in curae ac faucibus integer non. Adipiscing cubilia elementum integer. Integer eu ante ornare amet commetus.</p>
 							
 								</div>
 							</section>
@@ -162,10 +255,16 @@
 									<h3>Appendices</h3>
 
 									<h5>Future Work</h5>
-									<section></section>
+									<section>
+
+
+									</section>
 
 									<h5>Budget</h5>
-									<section></section>
+									<section>
+
+
+									</section>
 
 									<h5>References</h5>
 									<section></section>
@@ -176,340 +275,26 @@
 							<section id="seven">
 								<div class="container">
 									<h3>Code</h3>
+									<p>Our full repository of source code for PiCar can be found  <a href="https://github.com/anthony23334/PiCar">here</a> </p>
+									<p>
+										App.py - handles endpoinnts and starts camera server. 
+										<script src="https://gist.github.com/anthony23334/1f450f6066cee18e8900405af90e2426.js"></script>
+									</p>
+
+									<p>
+										robot_control.py - controls the robot movement.  
+										<script src="https://gist.github.com/anthony23334/38819ed862e456a464f9dc30601dc509.js"></script>
+									</p>
+
+									<p>
+										robot_detection.py - starts the camera and runs search algorithm.  
+										<script src="https://gist.github.com/anthony23334/fad1dd8e27508c1a8d68b2f7e7d7740d.js"></script>
+									</p>
+
 								</div>
 							</section>
 
-						<!-- Five -->
-						<!--
-							<section id="five">
-								<div class="container">
-									<h3>Elements</h3>
-
-									<section>
-										<h4>Text</h4>
-										<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-										This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-										This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-										<hr />
-										<header>
-											<h4>Heading with a Subtitle</h4>
-											<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
-										</header>
-										<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
-										<header>
-											<h5>Heading with a Subtitle</h5>
-											<p>Lorem ipsum dolor sit amet nullam id egestas urna aliquam</p>
-										</header>
-										<p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non faucibus ornare mi ut ante amet placerat aliquet. Volutpat eu sed ante lacinia sapien lorem accumsan varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
-										<hr />
-										<h2>Heading Level 2</h2>
-										<h3>Heading Level 3</h3>
-										<h4>Heading Level 4</h4>
-										<h5>Heading Level 5</h5>
-										<h6>Heading Level 6</h6>
-										<hr />
-										<h5>Blockquote</h5>
-										<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-										<h5>Preformatted</h5>
-										<pre><code>i = 0;
-
-								while (!deck.isInOrder()) {
-										print 'Iteration ' + i;
-										deck.shuffle();
-										i++;
-								}
-
-                print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-									</section>
-
-									<section>
-										<h4>Lists</h4>
-										<div class="row">
-											<div class="col-6 col-12-xsmall">
-												<h5>Unordered</h5>
-												<ul>
-													<li>Dolor pulvinar etiam magna etiam.</li>
-													<li>Sagittis adipiscing lorem eleifend.</li>
-													<li>Felis enim feugiat dolore viverra.</li>
-												</ul>
-												<h5>Alternate</h5>
-												<ul class="alt">
-													<li>Dolor pulvinar etiam magna etiam.</li>
-													<li>Sagittis adipiscing lorem eleifend.</li>
-													<li>Felis enim feugiat dolore viverra.</li>
-												</ul>
-											</div>
-											<div class="col-6 col-12-xsmall">
-												<h5>Ordered</h5>
-												<ol>
-													<li>Dolor pulvinar etiam magna etiam.</li>
-													<li>Etiam vel felis at lorem sed viverra.</li>
-													<li>Felis enim feugiat dolore viverra.</li>
-													<li>Dolor pulvinar etiam magna etiam.</li>
-													<li>Etiam vel felis at lorem sed viverra.</li>
-													<li>Felis enim feugiat dolore viverra.</li>
-												</ol>
-												<h5>Icons</h5>
-												<ul class="icons">
-													<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-													<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-													<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-													<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-													<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-													<li><a href="#" class="icon brands fa-tumblr"><span class="label">Tumblr</span></a></li>
-												</ul>
-											</div>
-										</div>
-										<h5>Actions</h5>
-										<ul class="actions">
-											<li><a href="#" class="button primary">Default</a></li>
-											<li><a href="#" class="button">Default</a></li>
-											<li><a href="#" class="button alt">Default</a></li>
-										</ul>
-										<ul class="actions small">
-											<li><a href="#" class="button primary small">Small</a></li>
-											<li><a href="#" class="button small">Small</a></li>
-											<li><a href="#" class="button alt small">Small</a></li>
-										</ul>
-										<div class="row">
-											<div class="col-3 col-6-medium col-12-xsmall">
-												<ul class="actions stacked">
-													<li><a href="#" class="button primary">Default</a></li>
-													<li><a href="#" class="button">Default</a></li>
-													<li><a href="#" class="button alt">Default</a></li>
-												</ul>
-											</div>
-											<div class="col-3 col-6 col-12-xsmall">
-												<ul class="actions stacked">
-													<li><a href="#" class="button primary small">Small</a></li>
-													<li><a href="#" class="button small">Small</a></li>
-													<li><a href="#" class="button alt small">Small</a></li>
-												</ul>
-											</div>
-											<div class="col-3 col-6-medium col-12-xsmall">
-												<ul class="actions stacked">
-													<li><a href="#" class="button primary fit">Default</a></li>
-													<li><a href="#" class="button fit">Default</a></li>
-													<li><a href="#" class="button alt fit">Default</a></li>
-												</ul>
-											</div>
-											<div class="col-3 col-6-medium col-12-xsmall">
-												<ul class="actions stacked">
-													<li><a href="#" class="button primary small fit">Small</a></li>
-													<li><a href="#" class="button small fit">Small</a></li>
-													<li><a href="#" class="button alt small fit">Small</a></li>
-												</ul>
-											</div>
-										</div>
-									</section>
-
-									<section>
-										<h4>Table</h4>
-										<h5>Default</h5>
-										<div class="table-wrapper">
-											<table>
-												<thead>
-													<tr>
-														<th>Name</th>
-														<th>Description</th>
-														<th>Price</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>Item One</td>
-														<td>Ante turpis integer aliquet porttitor.</td>
-														<td>29.99</td>
-													</tr>
-													<tr>
-														<td>Item Two</td>
-														<td>Vis ac commodo adipiscing arcu aliquet.</td>
-														<td>19.99</td>
-													</tr>
-													<tr>
-														<td>Item Three</td>
-														<td> Morbi faucibus arcu accumsan lorem.</td>
-														<td>29.99</td>
-													</tr>
-													<tr>
-														<td>Item Four</td>
-														<td>Vitae integer tempus condimentum.</td>
-														<td>19.99</td>
-													</tr>
-													<tr>
-														<td>Item Five</td>
-														<td>Ante turpis integer aliquet porttitor.</td>
-														<td>29.99</td>
-													</tr>
-												</tbody>
-												<tfoot>
-													<tr>
-														<td colspan="2"></td>
-														<td>100.00</td>
-													</tr>
-												</tfoot>
-											</table>
-										</div>
-
-										<h5>Alternate</h5>
-										<div class="table-wrapper">
-											<table class="alt">
-												<thead>
-													<tr>
-														<th>Name</th>
-														<th>Description</th>
-														<th>Price</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<td>Item One</td>
-														<td>Ante turpis integer aliquet porttitor.</td>
-														<td>29.99</td>
-													</tr>
-													<tr>
-														<td>Item Two</td>
-														<td>Vis ac commodo adipiscing arcu aliquet.</td>
-														<td>19.99</td>
-													</tr>
-													<tr>
-														<td>Item Three</td>
-														<td> Morbi faucibus arcu accumsan lorem.</td>
-														<td>29.99</td>
-													</tr>
-													<tr>
-														<td>Item Four</td>
-														<td>Vitae integer tempus condimentum.</td>
-														<td>19.99</td>
-													</tr>
-													<tr>
-														<td>Item Five</td>
-														<td>Ante turpis integer aliquet porttitor.</td>
-														<td>29.99</td>
-													</tr>
-												</tbody>
-												<tfoot>
-													<tr>
-														<td colspan="2"></td>
-														<td>100.00</td>
-													</tr>
-												</tfoot>
-											</table>
-										</div>
-									</section>
-
-									<section>
-										<h4>Buttons</h4>
-										<ul class="actions">
-											<li><a href="#" class="button primary">Primary</a></li>
-											<li><a href="#" class="button">Default</a></li>
-											<li><a href="#" class="button alt">Alternate</a></li>
-										</ul>
-										<ul class="actions">
-											<li><a href="#" class="button primary large">Large</a></li>
-											<li><a href="#" class="button">Default</a></li>
-											<li><a href="#" class="button alt small">Small</a></li>
-										</ul>
-										<ul class="actions fit">
-											<li><a href="#" class="button primary fit">Fit</a></li>
-											<li><a href="#" class="button fit">Fit</a></li>
-											<li><a href="#" class="button alt fit">Fit</a></li>
-										</ul>
-										<ul class="actions fit small">
-											<li><a href="#" class="button primary fit small">Fit + Small</a></li>
-											<li><a href="#" class="button fit small">Fit + Small</a></li>
-											<li><a href="#" class="button alt fit small">Fit + Small</a></li>
-										</ul>
-										<ul class="actions">
-											<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
-											<li><a href="#" class="button icon solid fa-download">Icon</a></li>
-											<li><a href="#" class="button alt icon solid fa-check">Icon</a></li>
-										</ul>
-										<ul class="actions">
-											<li><span class="button primary disabled">Primary</span></li>
-											<li><span class="button disabled">Default</span></li>
-											<li><span class="button alt disabled">Alternate</span></li>
-										</ul>
-									</section>
-
-									<section>
-										<h4>Form</h4>
-										<form method="post" action="#">
-											<div class="row gtr-uniform">
-												<div class="col-6 col-12-xsmall">
-													<input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
-												</div>
-												<div class="col-6 col-12-xsmall">
-													<input type="email" name="demo-email" id="demo-email" value="" placeholder="Email" />
-												</div>
-												<div class="col-12">
-													<select name="demo-category" id="demo-category">
-														<option value="">- Category -</option>
-														<option value="1">Manufacturing</option>
-														<option value="1">Shipping</option>
-														<option value="1">Administration</option>
-														<option value="1">Human Resources</option>
-													</select>
-												</div>
-												<div class="col-4 col-12-medium">
-													<input type="radio" id="demo-priority-low" name="demo-priority" checked>
-													<label for="demo-priority-low">Low Priority</label>
-												</div>
-												<div class="col-4 col-12-medium">
-													<input type="radio" id="demo-priority-normal" name="demo-priority">
-													<label for="demo-priority-normal">Normal Priority</label>
-												</div>
-												<div class="col-4 col-12-medium">
-													<input type="radio" id="demo-priority-high" name="demo-priority">
-													<label for="demo-priority-high">High Priority</label>
-												</div>
-												<div class="col-6 col-12-medium">
-													<input type="checkbox" id="demo-copy" name="demo-copy">
-													<label for="demo-copy">Email me a copy of this message</label>
-												</div>
-												<div class="col-6 col-12-medium">
-													<input type="checkbox" id="demo-human" name="demo-human" checked>
-													<label for="demo-human">I am a human and not a robot</label>
-												</div>
-												<div class="col-12">
-													<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
-												</div>
-												<div class="col-12">
-													<ul class="actions">
-														<li><input type="submit" value="Send Message" /></li>
-														<li><input type="reset" value="Reset" class="alt" /></li>
-													</ul>
-												</div>
-											</div>
-										</form>
-									</section>
-
-									<section>
-										<h4>Image</h4>
-										<h5>Fit</h5>
-										<span class="image fit"><img src="images/banner.jpg" alt="" /></span>
-										<div class="box alt">
-											<div class="row gtr-50 gtr-uniform">
-												<div class="col-4"><span class="image fit"><img src="images/pic01.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic01.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic03.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic01.jpg" alt="" /></span></div>
-												<div class="col-4"><span class="image fit"><img src="images/pic02.jpg" alt="" /></span></div>
-											</div>
-										</div>
-										<h5>Left &amp; Right</h5>
-										<p><span class="image left"><img src="images/avatar.jpg" alt="" /></span>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-										<p><span class="image right"><img src="images/avatar.jpg" alt="" /></span>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent tincidunt felis sagittis eget. tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-									</section>
-
-												</div>
-											</section>
-										-->
-
+					
 					</div>
 
 				<!-- Footer -->
