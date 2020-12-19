@@ -2977,6 +2977,10 @@ input, select, textarea {
 				height: 20em;
 			}
 
+			.image {
+				max-width: 330px;
+			}
+
 		/* Header */
 
 			#header {
