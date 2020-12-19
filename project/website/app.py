@@ -1,3 +1,9 @@
+"""
+File:        app.py
+Date:        Dec. 17. 2020
+Author:      Anthony Ngoma (an474), Tsetse Kludze(akk72)
+"""
+
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -9,7 +15,6 @@ import os
 from robot_detection import RobotDetection 
 import time 
 
-# proc = subprocess.Popen(["python", "../testing/robot_test.py"], stdin=subprocess.PIPE)
 cam = 0
 cam_proc= 0
 
@@ -30,9 +35,8 @@ def control():
     global cam 
     global cam_proc
     if (cam == 0): 
-        # cam_proc = os.system( 'python3 ../camera/cam.py & > /dev/null' )
         cam_proc = subprocess.Popen("exec python3 ../camera/cam.py > /dev/null", stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
-        time.sleep( 1 )
+        time.sleep( 1 ) # give time to create the process 
     cam = 1
     return render_template('control.html')
 
@@ -53,37 +57,30 @@ def auto():
 
 @app.route('/robot_front', methods=['GET', 'POST'])
 def robot_front():
-    # global proc 
-    # proc.stdin.write(str.encode('f'))
     rc.go_straight(1)
     print("FRONT")  
     return ('', 204)
 
 @app.route('/robot_back', methods=['GET', 'POST'])
 def robot_back():
-    # global proc 
-    # proc.stdin.write(str.encode('b'))
     rc.go_back(1)
     print("BACK")  
     return ('', 204)
 
 @app.route('/robot_right', methods=['GET', 'POST'])
 def robot_right():
-    # proc.stdin.write('r')
     rc.turn_right(0.5)
     print("RIGHT")  
     return ('', 204)
 
 @app.route('/robot_left', methods=['GET', 'POST'])
 def robot_left():
-    # proc.stdin.write('l')
     rc.turn_left(0.5);    
     print("LEFT")  
     return ('', 204)
 
 @app.route('/robot_stop', methods=['GET', 'POST'])
 def robot_stop():
-    # proc.stdin.write('l')
     rc.stop();    
     print("STOP")  
     return ('', 204)

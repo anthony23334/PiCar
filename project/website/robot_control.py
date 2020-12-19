@@ -1,7 +1,16 @@
+"""
+File:        robot_control.py
+Date:        Dec. 17. 2020
+Author:      Anthony Ngoma (an474), Tsetse Kludze(akk72)
+"""
+
 import RPi.GPIO as GPIO
 import time
 
 class RobotControl(object):
+    """
+    A class used to represent any robot movement that RPi can perform.
+    """
     def __init__(self):
         self.ai1 = 6 
         self.ai2 = 26 
@@ -115,11 +124,6 @@ class RobotControl(object):
                 self.turn_right(turn_time)
                 self.movement_counter =self.movement_counter +1
         return straight_time 
-
-        
-#rc = RobotControl(3, 0.5)
-#rc.automonous()
-
 
 
 

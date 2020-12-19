@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# File:        server.sh
+# Date:        Dec. 17. 2020
+# Author:      Anthony Ngoma (an474), Tsetse Kludze(akk72)
+# The entry point for the server authenticating into PiCar and launching the server. 
+
 WEB_PORT=5000
 CAM_PORT=8000
 CLASS_IP=132.236.79.205
@@ -29,17 +35,6 @@ if [[ $1 -eq 0 ]] ; then
   ssh -fNR $CAM_PORT_CLASS:localhost:$CAM_PORT $netid@$CLASS_IP > /dev/null
   echo "*********done*********"
 
-  echo ""
-  echo ""
-
-  # Start the camera server and put in the background 
-  # echo '====== Starting the camera server ======'
-  # python3 ../camera/cam.py & > /dev/null
-  # echo '*********done*********'
-
-  echo ""
-  echo ""
-
   # Open the website tunnel(RECV):
   echo '====== Ssh-tunneling server ======'
   ssh -fNR $WEB_PORT_CLASS:localhost:$WEB_PORT $netid@$CLASS_IP > /dev/null 
@@ -48,6 +43,8 @@ if [[ $1 -eq 0 ]] ; then
   echo ""
   echo ""
 fi 
+
+# Testing code 
 if [[ $1 -eq 1 ]] ; then 
   # Start the camera server and put in the background 
   echo '====== Starting the camera server ======'

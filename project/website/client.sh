@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# File:        client.sh
+# Date:        Dec. 17. 2020
+# Author:      Anthony Ngoma (an474), Tsetse Kludze(akk72)
+# The entry point for the client authenticating into PiCar as a client. 
+
 WEB_PORT=5000
 CAM_PORT=8000
 CLASS_IP=132.236.79.205
@@ -23,22 +29,17 @@ if [[ "$netid" == "an474" ]] ; then
   CAM_PORT_CLASS=3333
 fi 
 
+# Testing code 
 if [[ $1 -eq 0 ]] ; then 
   # Open the camera tunnel (RECV):
   echo '====== Ssh-tunneling camera ====== '
   ssh -fNL $CAM_PORT:localhost:$CAM_PORT_CLASS $netid@$CLASS_IP 
   echo "*********done*********"
 
-  echo ""
-  echo ""
-
   # Open the website tunnel(RECV):
   echo '====== Ssh-tunneling server ======'
   ssh -fNL $WEB_PORT:localhost:$WEB_PORT_CLASS $netid@$CLASS_IP 
   echo '*********done*********'
-
-  echo ""
-  echo ""
 fi 
 
 

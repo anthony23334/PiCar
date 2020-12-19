@@ -1,3 +1,9 @@
+"""
+File:        robot_detection.py
+Date:        Dec. 17. 2020
+Author:      Anthony Ngoma (an474), Tsetse Kludze(akk72)
+"""
+
 import cv2
 import numpy as np
 import os
@@ -7,6 +13,9 @@ import picamera
 from robot_control import RobotControl
 
 class RobotDetection(object):
+  """
+  A class used to represent any robot movement that RPi can perform.
+  """
   def __init__(self, rc):
     self.orb = cv2.ORB_create(nfeatures=3000)
     #Determines if the image was a good match
@@ -101,8 +110,3 @@ class RobotDetection(object):
         else:
             print('object location still in progress')
             straight_time = self.rc.automonous(straight_time, turn_time)
-
-
-# rc = RobotControl(3, 0.5) # go straight for 3, turn for 0.5
-# rd = RobotDetection(rc)
-# rd.start() 
