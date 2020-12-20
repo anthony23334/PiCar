@@ -30,10 +30,9 @@
 						<li><a href="#one" class="active">Introduction</a></li>
 						<li><a href="#two">Objective</a></li>
 						<li><a href="#three">Design and Testing</a></li>
-						<li><a href="#four">Results</a></li>
-						<li><a href="#five">Conclusions</a></li>
-						<li><a href="#six">Appendices</a></li>
-						<li><a href="#seven">Code</a></li>
+						<li><a href="#four">Results/Conclusions</a></li>
+						<li><a href="#five">Appendices</a></li>
+						<li><a href="#six">Code</a></li>
 					</ul>
 				</nav>
 				<footer>
@@ -68,8 +67,14 @@
 											<li class="icon solid fa-gamepad">Remote Control</li>
 											<li class="icon solid fa-laptop">Web Interface</li>
 											<li class="icon solid fa-eye">Object Detection</li>
-
 										</ul>
+
+										<p>
+										Taking inspiration from lab 3, we realized that using the PiTFt buttons and the breadboard buttons were not very practical for controlling the robot as it moves around; 
+										therefore, we look into solutions that will be wireless. 
+										We talked about how we can remedy this issue by creating a remote controller that will allow the user to control the robot. We wanted something that works even when the user is not directly next to or even can see the robot - something that matches the social-distancing semester we are having.  
+										As a result, we came up with the idea of a PiCar Controller which is a system that is composed of a RPi car that is controlled via https requests. Another feature we think that will be necessary is a live feed of what the robot is looking at, which can be achieved with a PiCamera. Depending on the progress, we may add other features such as recording previous actions and displaying some status on the PiTFT to inform those around the RPi what instructions are running.
+										</p>
 									</header>
 								</div>
 							</section>
@@ -79,11 +84,9 @@
 								<div class="container">
 									<h3>Objective</h3>
 									<p>
-										The inspiration of this project came from the ece4725 lab3 when we could not control the robot remotely.
-										Another inspiration was the different control/search mission robots in emergency situations.
-										The primary goal of PiCar is to have an interface where users do not have to be <b>directly next to</b> the RPi robot to send commands.  
-										From this remote interface, the PiCar offers two main features: remote control mode and remote automous mode, allowing any user to 
-										give instructions remotely after authenticating. 
+										This project is based on lab 3 where the robot platform developed in that lab planned to be reused with added functionality/components. Externally, image sensors (quality resolution undetermined as of now)  will be placed around the robot with images of its surroundings being constantly taken and ‘analyze’ to compare whether the object in question is there. One of them will be used as a live feed of the robot’s view. 
+										This project will have two modes: remote-control and autonomous. Remote Control is where the user has full control of the robot’s movements and while the user is driving the robot, is immediately alerted when the object has been identified through a live feed. Autonomous mode will leave the moment entirely up to the robot (by an algorithm developed by both team members). 
+										When the object has been identified, the robot will stop moving, face the direction of the object and emit a sound indicating that it has found the object. It is also planned to include LEDs to the raspberry pi to indicate the status of the recovery robot. 
 									</p>
 								</div>
 							</section>
@@ -108,7 +111,7 @@
 										</ul>
 										<figure>
 											<figcaption> <b> <u>Figure 1: Server Response through Classs' IP. </u></b> </figcaption>
-											<img src="img/server_response.svg" alt="serverResponse" />
+											<img src="img/server_response.svg" style="display: block; margin: auto; width: 100%" alt="serverResponse" />
 										</figure>
 										<p>
 											The first main script -- <b>server.sh</b> -- sets up the website and creates a port on the class' public server in order to do ssh tunneling to give authenticated remote users access to the website. 
@@ -123,7 +126,7 @@
 
 										<figure>
 											<figcaption> <b> <u>Figure 2: Client Request through Class' IP. </u></b> </figcaption>
-											<img src="img/client_request.svg" alt="clientRequest" />
+											<img src="img/client_request.svg" style="display: block; margin: auto; width: 100%" alt="clientRequest" />
 										</figure>
 										<p>
 											The second main script -- <b>client.sh</b> -- has only one job which is to allow the user to forward any localhost requests to the class' server ports. 
@@ -156,17 +159,17 @@
 										</p>
 										<figure>
 											<figcaption> <b> <u>Figure 3: PiCar Home Page. </u></b> </figcaption>
-											<img class="image" src="img/home_page.png" alt="PiCar's Home Page" />
+											<img src="img/home_page.png" style="display: block; margin: auto; width: 70%" alt="PiCar's Home Page" />
 										</figure>
 
 										<figure>
 											<figcaption> <b> <u>Figure 4: PiCar Control Page. </u></b> </figcaption>
-											<img class="image" src="img/control_page.png" alt="PiCar's Control Page" />
+											<img src="img/control_page.png" style="display: block; margin: auto; width: 70%" alt="PiCar's Control Page" />
 										</figure>
 
 										<figure>
 											<figcaption> <b> <u>Figure 5: PiCar Auto Page. </u></b> </figcaption>
-											<img class="image" src="img/auto_page.png" alt="PiCar's Auto Page" />
+											<img src="img/auto_page.png" style="display: block; margin: auto; width: 70%" alt="PiCar's Auto Page" />
 										</figure>
 
 										<p>
@@ -213,21 +216,87 @@
 								
 									<h5> Robot Control</h5>
 									<section>
-
+										<p>
+											In order to remotely control the robot, a class object named Robot_Control with methods that constitute the basic movements of the PiCar robot was created. This class uses the RPI.GPIO library to control the GPIO which will connect to the motor controller and essentially control the motors themselves. Since we did not want the robot to go full speed, as it drains the battery faster and makes it harder to drive, pulse width modulation (PWM) functions in GPIO were used to slow down to an acceptable level. Once configurations were set, methods were created in a modular fashion. 
+										</p>
+										<p>
+											First was the method run(serv_leter, turn) which based on parameters, can control each of the motors to rotate clockwise/counterclockwise and also stop. That became the building blocks to make additional directional methods that would allow the robot to go forward, backward, left, right, and stop by executing run(serv_leter, turn) for both motors consecutively. Each of the methods that execute these movements were named by their respective direction. 
+										</p>
+										<p>
+											It was initially planned that besides autonomous, only those methods would be created. In testing, however, we soon realized that since the motors are not calibrated to operate at the same inputs when a directional method is executed, one motor would rotate faster than the other, causing improper movement. To overcome this issue, new methods were created such that it would still execute the methods as usual, however, it would only run for a specific time so that the robot would perform the correct, albeit short, movement. Although this does limit movement to some degree, it was decided that there was a better approach. 
+										</p>
+										<p>
+											The last method created was autonomous(straight_time, turn_time). This method causes the robot in a rectangular spiral. Ideally, we want the robot to scan the area, determine whether the target is in the vicinity, and then move on to another location. Because of this, the method only performs one-directional movement per function call. Using an attribute of the class movement_counter, the robot keeps track of its previous movement by looking at the counter, making the approximate movement based on that value, and then increments the counter to signify what the previous move was. The parameters, straight_time, turn_time are set based on its search area and decrements the straight time so that when it has covered the entire search area, that function will not execute any movement and stay in place. Testing of this method was done in another python script before it was added to the class as a method.
+										</p>
 									</section>
 
 									<h5> Robot Detection</h5>
 									<section>
+										<p>
+											Robot_Detection, another class object,  was made so that when autonomous mode is chosen, the robot itself can determine whether the target is in the area or not. Robot Detection was made so that multiple targets can be searched for but for demo purposes, only a single target was searched for. Additionally, Robot_Detection uses Robot_Control to facilitate the movement of the robot itself as opposed to simply reusing the same command. 
+										</p>
+
+										<p>
+											Robot_detection uses the image uploaded from the website and compares it with its surroundings with image recognition from OpenCV. First, the image of the target is located in the Raspberry Pi with the method load_images() where it is decomposed into four separate variables: its name, the image file itself, the descripers, and keypoint detectors of the photos (the last two are generated using OpenCV’s Oriented FAST and Rotated BRIEF (ORB) algorithm). 
+										</p>
+
+										<p>
+											Once that is generated, the robot will take a photo of the area and then compare it with the target’s photo using the method findID(image). In that method, the image keypoint detectors and descriptors are generated with ORB. The image’s descriptors and target descriptors’ are then compared with another matching algorithm that generates a single value of their similarities. If a certain comparison value is greater than a specific threshold value, it is determined that the image is found, and the name of the image is returned. If not, A string, “Object Not Found” is returned”. If multiple targets are above the threshold value, the one with the highest value is selected. This threshold value, as we found through testing, varies mainly on the external lighting of the area, and as such was changed as needed.
+										</p>
+
+										<p>
+											These two methods are then used in the method start(). load_images() is initially executed, with the straight_time and turn_time set before run. Then a continuous loop begins to search for the image where the Camera takes five photos of the same location and uses findID() to see if the target is in the line of sight. If the target is recognized, the loop is broken and the program terminates when sending a signal to the client that the object is found. If not, autonomous() is called to begin moving the robot to a new location where it continues to do so until the object is found. Print Statements were also embedded into the detection for debugging purposes as well as give the server terminal a near real-time update of the robot.
+										</p>
+
 									</section>
 
 									<h5>Hardware</h5>
-
+									<p>
+										With the exception of the Camera Setup, the Hardware remains nearly identical to one found in lab 3 of the FAll 2020 ECE 5725 course. Although, this shall be reiterated, please see <a href="https://drive.google.com/file/d/1QLCw_nPDPK5he5CKXadgPEhUUGLMPpOf/view?usp=sharing">this pdf</a> report for more detailed information. 
+									</p>
 									<h5> Camera Setup</h5>
 									<section>
+										<figure>
+											<figcaption> <b> <u>Figure 6: Camera. </u></b> </figcaption>
+											<img src="img/pi_camera.jpg" style="display: block; margin: auto; width: 70%" alt="Camera" />
+										</figure>
+
+										<p>The PiCar uses a V2 raspberry pi camera module that is mounted on the front of the robot. This camera was chosen for two reasons. First, was that with the $100 budget constraint, it provided the necessary specifications while still being cheap. Secondly, since the camera is an official Raspberry Pi accessory, there was painless integration with the robot and raspberry pi. Even more so, we were about to take advantage of the PiCamera’s python library, which makes programming easier. Earlier attempts used the OpenCV libraries to take the images resulting in slow capture times. Switching to the PiCamera libraries for photo capture and then using OpenCV image for computation yielded not only better performance, but also allowed easier use with the webserver.
+										</p>
+
 									</section>
 
 									<h5> Motors Setup</h5>
 									<section>
+									<figure>
+										<figcaption> <b> <u>Figure 7: Motor driver. </u></b> </figcaption>
+										<img src="img/motor.png" style="display: block; margin: auto; width: 70%" alt="Motor Driver" />
+									</figure>
+									<p>
+										The motor controller, Sparkfun TB6612FNG dual-channel motors were used to control the two motors, acting as the adapter from the GPIO outputs to the inputs of the DC motors. The inputs that control one a motor were labeled “PWM A, INA2, and INA1”, with the other motor inputs being labeled as to its “B” variants. The motors themselves are 6v DC motors. Since these motors run on 6V, an external battery pack is used as the voltage rail and is connected to the VCC input of the motor controller.
+									</p>
+									<figure>
+										<figcaption> <b> <u>Figure 8: Motor Modes. </u></b> </figcaption>
+										<img src="img/extra.png" style="display: block; margin: auto; width: 70%" alt="Motor Modes" />
+									</figure>
+									<p>
+										IN1 and IN2 control the direction in which the motor spins where PWM controls the speed. That is due to the fact the motor controller looks at the duty cycle of PWM and determines the necessary speed. A duty cycle of 1 signals that the motor must go full speed, with a  duty cycle of 0 means it does not move. Anything in-between means a speed proportional to its duty cycle. 
+									</p>
+									<figure>
+										<figcaption> <b> <u>Figure 9: Motor Control Setup. </u></b> </figcaption>
+										<img src="img/setup.png" style="display: block; margin: auto; width: 70%" alt="Motor Setup" />
+									</figure>
+
+									<figure>
+										<figcaption> <b> <u>Figure 10: Motor Control Schematics. </u></b> </figcaption>
+										<img src="img/schema.png" style="display: block; margin: auto; width: 70%" alt="Motor Schematics" />
+									</figure>
+
+									<figure>
+										<figcaption> <b> <u>Figure 11: Final Robot setup </u></b> </figcaption>
+										<img src="img/final_setup.png" style="display: block; margin: auto; width: 70%" alt="Final Setup" />
+									</figure>
+
 									</section>
 								</div>
 							</section>
@@ -235,44 +304,77 @@
 						<!-- Four -->
 							<section id="four">
 								<div class="container">
-									<h3>Results</h3>
-									
+									<h3>Results/Conslusions</h3>
+									<p>
+										After hours of debugging, we were able to complete all of our initial goals. While we largely met the goals outlined in this project, there were some troubling shootings. We were successfully able to remotely control the robot through a website, and more importantly, connect to each other's Raspberry Pi’s, however it was not initially planned that tunneling was to be used. We would also be able to develop an image recognition algorithm that had relatively low false positives and a robot that can search for the object itself; yet, lighting played a much more significant role and expected and caused both team members to vary the algorithms ‘aggressiveness’ based on that. There were major latencies in the camera in initial testing, but it got resolved as we adapted the code.  Additionally, the miscalibrations of the motors made movement an at first problem - something that we did not expect seeing that lab 3 provided a basic introduction to motor control. Nevertheless, a solution was found. In short, our project, PiCar, is able to provide remote and autonomous control as intended. 
+									</p>
 								</div>
 							</section>
-
 
 							<!-- Five -->
 							<section id="five">
-								<div class="container">
-									<h3>Conclusions</h3>
-							
-								</div>
-							</section>
-
-							<!-- Six -->
-							<section id="six">
 								<div class="container">
 									<h3>Appendices</h3>
 
 									<h5>Future Work</h5>
 									<section>
+										<p>
+											If this project was to be continued, certain aspects of this project would be improved. Firstly, a feedback system for the motors would be implemented to help with the miscalibration of the motors. This was an expected issue we encountered and although the solution was always clear to us, we did not have enough time to design and install.
+										</p>
 
+										<p>
+											Secondly, more time would have been used to find a camera that is higher resolution but still cheap. One of the factors that determine the performance of image recognition is the quality of the photo itself. Having a better quality camera would reduce the false positives in the PiCar.
+										</p>
+
+										<p>
+											Lastly, another possible improvement is merging the logic for control and autonomous mode and adding more “good to have” features . As of now, the server has only one camera so we created and killed the camera process as different modes asked for the camera. Although this is not ideal, it gave us the prototype we needed. However, allocating and deallocating the process is wasteful and can be improved if we create maybe one instance for the camera class that can be passed around depending on which tab is open. Other improvements involve giving the user more control or improvement on the UI. For example, one is adding the ability to increase the speed by adding a slider HTMLelement. 
+										</p>
+
+										<p>
+											In conclusion, there are multiple ways we can improve PiCar; however, given the timeline, we were able to achieve all our goals; however, future works can always build on top of this prototype.      
+										</p>
 
 									</section>
 
 									<h5>Budget</h5>
 									<section>
-
-
+										<img src="img/budget.png" style="display: block; margin: auto; width: 100%" alt="Budget" />
 									</section>
 
 									<h5>References</h5>
-									<section></section>
+									<section>
+										<ul>
+											<li>
+												https://unix.stackexchange.com/questions/46235/how-does-reverse-ssh-tunneling-work: contains an explanation on ssh tunneling and which commands to use and why. 
+											</li>
+											<li>
+												https://html5up.net/: contains templates on how to create static sites
+											</li>
+											<li>
+												https://www.raspberrypi.org/forums/viewtopic.php?t=89834: advice on how to deal with image detection of dark-lit  places. 
+											</li>
+											<li>
+												https://www.raspberrypi.org/documentation/usage/gpio/python/README.md: documentation of the GPIO library. 
+											</li>
+											<li>
+												https://docs.opencv.org/master/d1/d89/tutorial_py_orb.html: documentation on ORB
+											</li>
+											<li>
+												https://docs.opencv.org/3.4/dc/dc3/tutorial_py_matcher.html: documentation on Feature Matching.  
+											</li>
+											<li>
+												https://www.youtube.com/watch?v=nnH55-zD38I: a video showing image recognition in action.
+											</li>
+											<li>
+												https://randomnerdtutorials.com/video-streaming-with-raspberry-pi-camera/: explains how to setup RPi camera 
+											</li>
+										</ul>
+									</section>
 								</div>
 							</section>
 
-							<!-- Seven -->
-							<section id="seven">
+							<!-- Six -->
+							<section id="six">
 								<div class="container">
 									<h3>Code</h3>
 									<p>Our full repository of source code for PiCar can be found  <a href="https://github.com/anthony23334/PiCar">here</a> </p>
